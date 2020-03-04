@@ -27,7 +27,9 @@ func main() {
 	s, err := newServer(func(s *server) error {
 		pid := projectID()
 		if pid == "" {
-			s.db = &inMemStore{}
+			// s.db = &inMemStore{}
+			// use filesystemStore
+			s.db = newFilesystemStore()
 		} else {
 			c, err := datastore.NewClient(context.Background(), pid)
 			if err != nil {

@@ -6,6 +6,8 @@ package main
 
 import (
 	"context"
+	"io/ioutil"
+	"os"
 	"sync"
 
 	"cloud.google.com/go/datastore"
@@ -57,5 +59,47 @@ func (s *inMemStore) GetSnippet(_ context.Context, id string, snip *snippet) err
 		return datastore.ErrNoSuchEntity
 	}
 	*snip = *v
+	return nil
+}
+
+// filesystemStore is a store backed by a map that should only be used for filesystem.
+// add by polairs, at 2020-03-04
+type filesystemStore struct {
+	storePath string
+	sync.RWMutex
+	m map[string]*snippet // key -> snippet
+}
+
+func newFilesystemStore() *filesystemStore {
+	storePath := "./snippet"
+	if err := os.MkdirAll(storePath, 0755); err != nil {
+		panic(err)
+	}
+
+	return &filesystemStore{storePath: storePath}
+}
+
+func (f *filesystemStore) PutSnippet(_ context.Context, id string, snip *snippet) error {
+	filePath := f.storePath + "/" + id[:2]
+	os.Mkdir(filePath, 0755)
+	file, err := os.Create(filePath + "/" + id)
+	if err != nil {
+		log.Errorf("create snip file error:%#v", err)
+		return err
+	}
+	defer file.Close()
+	file.Write(snip.Body)
+
+	return nil
+}
+
+func (f *filesystemStore) GetSnippet(_ context.Context, id string, snip *snippet) error {
+	body, err := ioutil.ReadFile(f.storePath + "/" + id[:2] + "/" + id)
+	if err != nil {
+		return datastore.ErrNoSuchEntity
+	}
+
+	snip.Body = body
+
 	return nil
 }

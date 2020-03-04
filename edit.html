@@ -3,17 +3,16 @@
 	<head>
 		<title>The Go Playground</title>
 		<link rel="stylesheet" href="/static/style.css">
-		{{if .Analytics}}
-		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-11222381-7"></script>
 		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag(){dataLayer.push(arguments);}
-			gtag('js', new Date());
-			gtag('config', 'UA-11222381-7');
-			gtag('config', 'UA-49880327-6');
+			var _hmt = _hmt || [];
+			(function() {
+				var hm = document.createElement("script");
+				hm.src = "https://hm.baidu.com/hm.js?224c227cd9239761ec770bc8c1fb134c";
+				var s = document.getElementsByTagName("script")[0];
+				s.parentNode.insertBefore(hm, s);
+			})();
 		</script>
-		{{end}}
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<script src="/static/jquery.min.js"></script>
 		<script src="/static/jquery-linedtextarea.js"></script>
 		<script src="/playground.js"></script>
 		<script src="/static/playground-embed.js"></script>
@@ -204,5 +203,9 @@ Any requests for content removal should be directed to
 Please include the URL and the reason for the request.
 </p>
 		</div>
+
+		<footer>
+			<a href="http://www.beian.miit.gov.cn/" target="_blank">京ICP备14030343号-1</a>
+		</footer>
 	</body>
 </html>

@@ -2,3 +2,6 @@
 
 snippet
 playground
+
+.idea
+sync.sh
